@@ -158,7 +158,7 @@ class RecipesService extends BaseService
 
 		$newName = LocalizationService::GetInstance()->__t('Copy of %s', $this->DB->recipes($recipeId)->name);
 
-		DatabaseService::GetInstance()->ExecuteDbStatement('INSERT INTO recipes (name, description, picture_file_name, base_servings, desired_servings, not_check_shoppinglist, type, product_id) SELECT :new_name, description, picture_file_name, base_servings, desired_servings, not_check_shoppinglist, type, product_id FROM recipes WHERE id = :recipe_id', ['recipe_id' => $recipeId, 'new_name' => $newName]);
+		DatabaseService::GetInstance()->ExecuteDbStatement('INSERT INTO recipes (name, description, picture_file_name, base_servings, desired_servings, not_check_shoppinglist, type, product_id, category_id) SELECT :new_name, description, picture_file_name, base_servings, desired_servings, not_check_shoppinglist, type, product_id, category_id FROM recipes WHERE id = :recipe_id', ['recipe_id' => $recipeId, 'new_name' => $newName]);
 		$lastInsertId = $this->DB->lastInsertId();
 		DatabaseService::GetInstance()->ExecuteDbStatement('INSERT INTO recipes_pos (recipe_id, product_id, amount, note, qu_id, only_check_single_unit_in_stock, ingredient_group, not_check_stock_fulfillment, variable_amount, price_factor) SELECT :last_insert_id, product_id, amount, note, qu_id, only_check_single_unit_in_stock, ingredient_group, not_check_stock_fulfillment, variable_amount, price_factor FROM recipes_pos WHERE recipe_id = :recipe_id', ['recipe_id' => $recipeId, 'last_insert_id' => $lastInsertId]);
 		DatabaseService::GetInstance()->ExecuteDbStatement('INSERT INTO recipes_nestings (recipe_id, includes_recipe_id, servings) SELECT :last_insert_id, includes_recipe_id, servings FROM recipes_nestings WHERE recipe_id = :recipe_id', ['recipe_id' => $recipeId, 'last_insert_id' => $lastInsertId]);
@@ -170,5 +170,22 @@ class RecipesService extends BaseService
 	{
 		$recipeRow = $this->DB->recipes()->where('id = :1', $recipeId)->fetch();
 		return $recipeRow !== null;
+	}
+
+	// Recipe Categories methods
+
+	public function GetRecipeCategories()
+	{
+		return $this->DB->recipe_categories()->orderBy('sort_number')->fetchAll();
+	}
+
+	public function GetRecipeCategory($categoryId)
+	{
+		return $this->DB->recipe_categories($categoryId);
+	}
+
+	public function RecipeCategoryExists($categoryId)
+	{
+		return $this->DB->recipe_categories($categoryId) !== null;
 	}
 }

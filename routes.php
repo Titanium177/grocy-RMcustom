@@ -104,6 +104,7 @@ $app->group('', function (RouteCollectorProxy $group)
 	$group->get('/recipe/{recipeId}/pos/{recipePosId}', [RecipesController::class, 'RecipePosEditForm']);
 	$group->get('/recipessettings', [RecipesController::class, 'RecipesSettings']);
 	$group->get('/recipe/{recipeId}/grocycode', [RecipesController::class, 'RecipeGrocycodeImage']);
+	$group->get('/recipecategory/{categoryId}', [RecipesController::class, 'RecipeCategoryEditForm']);
 
 	// Meal plan routes
 	$group->get('/mealplan', [RecipesController::class, 'MealPlan']);

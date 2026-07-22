@@ -119,7 +119,8 @@ class RecipesController extends BaseController
 			'quantityUnitConversionsResolved' => $this->DB->cache__quantity_unit_conversions_resolved(),
 			'selectedRecipeTotalCosts' => $totalCosts,
 			'selectedRecipeTotalCalories' => $totalCalories,
-			'mealplanSections' => $this->DB->meal_plan_sections()->orderBy('sort_number')
+			'mealplanSections' => $this->DB->meal_plan_sections()->orderBy('sort_number'),
+			'recipeCategories' => RecipesService::GetInstance()->GetRecipeCategories()
 		];
 
 		if ($selectedRecipe)
@@ -171,7 +172,8 @@ class RecipesController extends BaseController
 			'recipes' => $this->DB->recipes()->where('type', RecipesService::RECIPE_TYPE_NORMAL)->orderBy('name', 'COLLATE NOCASE'),
 			'recipeNestings' => $this->DB->recipes_nestings()->where('recipe_id', $recipeId),
 			'userfields' => UserfieldsService::GetInstance()->GetFields('recipes'),
-			'quantityUnitConversionsResolved' => $this->DB->cache__quantity_unit_conversions_resolved()
+			'quantityUnitConversionsResolved' => $this->DB->cache__quantity_unit_conversions_resolved(),
+			'recipeCategories' => RecipesService::GetInstance()->GetRecipeCategories()
 		]);
 	}
 
@@ -205,7 +207,9 @@ class RecipesController extends BaseController
 
 	public function RecipesSettings(Request $request, Response $response, array $args)
 	{
-		return $this->RenderPage($response, 'recipessettings');
+		return $this->RenderPage($response, 'recipessettings', [
+			'recipeCategories' => RecipesService::GetInstance()->GetRecipeCategories()
+		]);
 	}
 
 	public function MealPlanSectionEditForm(Request $request, Response $response, array $args)
@@ -230,6 +234,23 @@ class RecipesController extends BaseController
 		return $this->RenderPage($response, 'mealplansections', [
 			'mealplanSections' => $this->DB->meal_plan_sections()->where('id > 0')->orderBy('sort_number')
 		]);
+	}
+
+	public function RecipeCategoryEditForm(Request $request, Response $response, array $args)
+	{
+		if ($args['categoryId'] == 'new')
+		{
+			return $this->RenderPage($response, 'recipecategoryform', [
+				'mode' => 'create'
+			]);
+		}
+		else
+		{
+			return $this->RenderPage($response, 'recipecategoryform', [
+				'recipeCategory' => $this->DB->recipe_categories($args['categoryId']),
+				'mode' => 'edit'
+			]);
+		}
 	}
 
 	public function RecipeGrocycodeImage(Request $request, Response $response, array $args)

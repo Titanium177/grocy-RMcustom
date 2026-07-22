@@ -51,6 +51,17 @@
 				<div class="invalid-feedback">{{ $__t('A name is required') }}</div>
 			</div>
 
+			<div class="form-group">
+				<label for="category_id">{{ $__t('Category') }}</label>
+				<select class="custom-control custom-select"
+					id="category_id"
+					name="category_id">
+					@foreach($recipeCategories as $category)
+					<option value="{{ $category->id }}" @if($mode == 'edit' && $recipe->category_id == $category->id) selected @endif>{{ $category->name }}</option>
+					@endforeach
+				</select>
+			</div>
+
 			@php if($mode == 'edit') { $value = $recipe->base_servings; } else { $value = 1; } @endphp
 			@include('components.numberpicker', array(
 			'id' => 'base_servings',

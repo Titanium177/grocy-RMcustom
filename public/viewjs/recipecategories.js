@@ -1,19 +1,3 @@
-﻿if (BoolVal(Grocy.UserSettings.recipe_ingredients_group_by_product_group))
-{
-	$("#recipe_ingredients_group_by_product_group").prop("checked", true);
-}
-
-if (BoolVal(Grocy.UserSettings.recipes_show_list_side_by_side))
-{
-	$("#recipes_show_list_side_by_side").prop("checked", true);
-}
-
-if (BoolVal(Grocy.UserSettings.recipes_show_ingredient_checkbox))
-{
-	$("#recipes_show_ingredient_checkbox").prop("checked", true);
-}
-
-// Recipe categories management
 var recipeCategoriesTable = $('#recipecategories-table').DataTable({
 	'order': [[2, 'asc']],
 	'columnDefs': [
@@ -66,7 +50,7 @@ $(document).on('click', '.recipecategory-delete-button', function(e)
 				Grocy.Api.Delete('objects/recipe_categories/' + objectId, {},
 					function(result)
 					{
-						window.location.href = U('/recipessettings');
+						window.location.href = U('/recipecategories');
 					},
 					function(xhr)
 					{

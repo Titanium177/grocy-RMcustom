@@ -5887,6 +5887,7 @@
 					"recipes",
 					"recipes_pos",
 					"recipes_nestings",
+					"recipe_categories",
 					"tasks",
 					"task_categories",
 					"product_groups",

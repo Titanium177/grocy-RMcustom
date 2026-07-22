@@ -93,6 +93,21 @@
 				</div>
 			</div>
 
+			<div class="col-12 col-md-5">
+				<div class="input-group">
+					<div class="input-group-prepend">
+						<span class="input-group-text"><i class="fa-solid fa-filter"></i>&nbsp;{{ $__t('Category') }}</span>
+					</div>
+					<select class="custom-control custom-select"
+						id="category-filter">
+						<option value="all">{{ $__t('All') }}</option>
+						@foreach($recipeCategories as $category)
+						<option value="{{ $category->id }}">{{ $category->name }}</option>
+						@endforeach
+					</select>
+				</div>
+			</div>
+
 			<div class="col">
 				<div class="float-right mt-1">
 					<button id="clear-filter-button"
@@ -148,6 +163,7 @@
 							<th class="d-none">Hidden status for filtering by status</th>
 							<th class="d-none">Hidden recipe ingredient product names</th>
 							<th class="d-none">Hidden status for grouping by status</th>
+							<th class="d-none">Hidden category id for filtering by category</th>
 
 							@include('components.userfields_thead', array(
 							'userfields' => $userfields
@@ -233,6 +249,9 @@
 							</td>
 							<td class="d-none">
 								@if(FindObjectInArrayByPropertyValue($recipesResolved, 'recipe_id', $recipe->id)->need_fulfilled == 1) {{ $__t('Enough in stock') }} @elseif(FindObjectInArrayByPropertyValue($recipesResolved, 'recipe_id', $recipe->id)->need_fulfilled_with_shopping_list == 1) {{ $__t('Not enough in stock, but already on the shopping list') }} @else {{ $__t('Not enough in stock') }} @endif
+							</td>
+							<td class="d-none">
+								{{ $recipe->category_id }}
 							</td>
 
 							@include('components.userfields_tbody', array(

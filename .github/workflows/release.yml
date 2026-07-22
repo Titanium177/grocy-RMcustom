@@ -1,0 +1,94 @@
+name: Create Release Package
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+
+      - name: Extract version from tag
+        id: get_version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Update version.json
+        run: |
+          DATE=$(date -u +%Y-%m-%d)
+          jq --arg version "${{ steps.get_version.outputs.version }}" \
+             --arg date "$DATE" \
+             '.Version = $version | .ReleaseDate = $date' \
+             version.json > version.json.tmp && mv version.json.tmp version.json
+          cat version.json
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y p7zip-full jq
+          composer install
+          yarn install
+
+      - name: Create release package
+        run: |
+          VERSION="${{ steps.get_version.outputs.version }}"
+          RELEASE_PATH=".release"
+          mkdir -p "$RELEASE_PATH"
+          
+          # Remove old zip if exists
+          rm -f "$RELEASE_PATH/grocy-RMcustom_$VERSION.zip"
+          
+          # Create zip with exclusions
+          7z a -r "$RELEASE_PATH/grocy-RMcustom_$VERSION.zip" \
+            . \
+            -xr!.git \
+            -xr!.github \
+            -xr!.release \
+            -xr!.devtools \
+            -xr!.tx \
+            -xr!.vscode \
+            -xr!.gitignore \
+            -xr!.gitattributes \
+            -xr!.yarnrc \
+            -xr!composer.json \
+            -xr!composer.lock \
+            -xr!package.json \
+            -xr!yarn.lock \
+            -xr!docs \
+            -xr!test \
+            -xr!'public/packages/@fortawesome/fontawesome-free/js' \
+            -xr!'public/packages/@fortawesome/fontawesome-free/less' \
+            -xr!'public/packages/@fortawesome/fontawesome-free/metadata' \
+            -xr!'public/packages/@fortawesome/fontawesome-free/scss' \
+            -xr!'public/packages/@fortawesome/fontawesome-free/sprites' \
+            -xr!'public/packages/@fortawesome/fontawesome-free/svgs' \
+            -xr!'data/*' \
+            -xr!'data/storage' \
+            -xr!'data/viewcache/*' \
+            -xr!'changelog/__TEMPLATE.md'
+          
+          # Add back .htaccess files
+          7z a "$RELEASE_PATH/grocy-RMcustom_$VERSION.zip" "public/.htaccess" "data/.htaccess"
+          
+          # Verify
+          ls -lh "$RELEASE_PATH/grocy-RMcustom_$VERSION.zip"
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: .release/grocy-RMcustom_${{ steps.get_version.outputs.version }}.zip
+          draft: true
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

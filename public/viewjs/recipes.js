@@ -88,8 +88,10 @@ $("#clear-filter-button").on("click", function()
 {
 	$("#search").val("");
 	$("#status-filter").val("all");
+	$("#category-filter").val("all");
 	$("#search").trigger("keyup");
 	$("#status-filter").trigger("change");
+	$("#category-filter").trigger("change");
 });
 
 $("#status-filter").on("change", function()
@@ -126,6 +128,26 @@ $("#status-filter").on("change", function()
 	else
 	{
 		UpdateUriParam("status", value);
+	}
+});
+
+$("#category-filter").on("change", function()
+{
+	var value = $(this).val();
+	if (value === "all")
+	{
+		value = "";
+	}
+
+	recipesTables.column(recipesTables.colReorder.transpose(9)).search(value).draw();
+
+	if (!value)
+	{
+		RemoveUriParam("category");
+	}
+	else
+	{
+		UpdateUriParam("category", value);
 	}
 });
 

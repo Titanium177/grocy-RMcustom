@@ -17,7 +17,7 @@ class GenericEntityApiController extends BaseApiController
 		{
 			User::CheckPermission($request, User::PERMISSION_SHOPPINGLIST_ITEMS_ADD);
 		}
-		elseif ($args['entity'] == 'recipes' || $args['entity'] == 'recipes_pos' || $args['entity'] == 'recipes_nestings')
+		elseif ($args['entity'] == 'recipes' || $args['entity'] == 'recipes_pos' || $args['entity'] == 'recipes_nestings' || $args['entity'] == 'recipe_categories')
 		{
 			User::CheckPermission($request, User::PERMISSION_RECIPES);
 		}
@@ -81,7 +81,7 @@ class GenericEntityApiController extends BaseApiController
 		{
 			User::CheckPermission($request, User::PERMISSION_SHOPPINGLIST_ITEMS_DELETE);
 		}
-		elseif ($args['entity'] == 'recipes' || $args['entity'] == 'recipes_pos' || $args['entity'] == 'recipes_nestings')
+		elseif ($args['entity'] == 'recipes' || $args['entity'] == 'recipes_pos' || $args['entity'] == 'recipes_nestings' || $args['entity'] == 'recipe_categories')
 		{
 			User::CheckPermission($request, User::PERMISSION_RECIPES);
 		}
@@ -131,7 +131,7 @@ class GenericEntityApiController extends BaseApiController
 		{
 			User::CheckPermission($request, User::PERMISSION_SHOPPINGLIST_ITEMS_ADD);
 		}
-		elseif ($args['entity'] == 'recipes' || $args['entity'] == 'recipes_pos' || $args['entity'] == 'recipes_nestings')
+		elseif ($args['entity'] == 'recipes' || $args['entity'] == 'recipes_pos' || $args['entity'] == 'recipes_nestings' || $args['entity'] == 'recipe_categories')
 		{
 			User::CheckPermission($request, User::PERMISSION_RECIPES);
 		}

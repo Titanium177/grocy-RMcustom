@@ -2462,6 +2462,21 @@ msgstr "Speiseplanabschnitt \"%s\" wirklich löschen?"
 msgid "Section"
 msgstr "Abschnitt"
 
+msgid "Recipe categories"
+msgstr "Rezeptkategorien"
+
+msgid "Create recipe category"
+msgstr "Rezeptkategorie erstellen"
+
+msgid "Edit recipe category"
+msgstr "Rezeptkategorie bearbeiten"
+
+msgid "Are you sure you want to delete recipe category \"%s\"?"
+msgstr "Rezeptkategorie \"%s\" wirklich löschen?"
+
+msgid "Categories will be ordered by that number"
+msgstr "Die Kategorien werden nach dieser Nummer sortiert"
+
 msgid "Are you sure you want to empty the shopping list?"
 msgstr "Den Einkaufszettel wirklich leeren? "
 

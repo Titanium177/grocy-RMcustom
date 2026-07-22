@@ -33,7 +33,7 @@ See the website for a list of community contributed Add-ons / Tools. &rarr; [htt
 
 > Checkout [Grocy Desktop](https://github.com/grocy/grocy-desktop), if you want to run Grocy without having to manage a webserver just like a normal (Windows) desktop application.
 >
-> Directly download the [latest release](https://releases.grocy.info/latest-desktop) (also [available via the Microsoft Store](https://apps.microsoft.com/detail/9NWB1TRNNKSF)) - the installation is nothing more than just clicking 2 times "next".
+> Directly download the [latest release](https://releases.grocy.info/latest-desktop) (also [available via the Microsoft Store](https://apps.microsoft.com/detail/9NWB1TRNNKSF)) - the installation is straight forward.
 
 Grocy is technically a pretty simple PHP application, so the basic notes to get it running are:
 - Unpack the [latest release](https://releases.grocy.info/latest)
@@ -61,9 +61,13 @@ See the website for more installation guides and troubleshooting help. &rarr; [h
 ## How to update
 
 - Overwrite everything with the [latest release](https://releases.grocy.info/latest) while keeping the `data` directory
-- Check `config-dist.php` for new configuration options and add them to your `data/config.php` where appropriate (the default values from `config-dist.php` will be used for not in `data/config.php` defined settings)
+- Check `config-dist.php` for new configuration options and add them to your `data/config.php` where appropriate (the default values from `config-dist.php` will be used for not in `data/config.php`)
 
-If you run Grocy on Linux, there is also `update.sh` (remember to make the script executable via `chmod +x update.sh` and ensure that you have `unzip` installed) which does exactly this and additionally creates a backup (`.tgz` archive) of the current installation in `data/backups` (backups older than 60 days will be deleted during the update).
+If you run Grocy on Linux, there is also `update.sh` (remember to make the script executable via `chmod +x update.sh` and ensure that you have `unzip` installed) which does exactly this and additionally creates a backup of your current installation in `data/backups`.
+
+## Releases
+
+This project uses an automated release process powered by GitHub Actions. Releases are created by pushing a Git tag. For detailed information on how to create and manage releases, see [RELEASES.md](docs/RELEASES.md).
 
 ## Localization
 
@@ -73,7 +77,7 @@ You can easily help translating Grocy on [Transifex](https://explore.transifex.c
 
 The default language can be set in `data/config.php`, e. g. `Setting('DEFAULT_LOCALE', 'de');` and there is also a user setting (see the user settings page) to set a different language per user.
 
-The [pre-release demo](https://demo-prerelease.grocy.info) is available for any translation which is at least 70 % complete and will pull the translations from Transifex 10 minutes past every hour, so you can have a kind of instant preview of your contributed translations. Thank you!
+The [pre-release demo](https://demo-prerelease.grocy.info) is available for any translation which is at least 70 % complete and will pull the translations from Transifex 10 minutes past every hour.
 
 Also any translation which once reached a completion level of 70 % ([`strings` resource](https://app.transifex.com/grocy/grocy/strings/)) will be included in releases.
 
@@ -81,7 +85,7 @@ _RTL languages are not yet supported._
 
 ## Motivation
 
-A household needs to be managed. Before Grocy I did this (for almost 10 years) using my first self written software (a C# Windows forms application) and with a bunch of Excel sheets. The software was a pain to use at the end and Excel is Excel. So I searched for and tried different things for a (very) long time, nothing 100 % fitted, so this is my aim for a "complete household management"-thing. ERP your fridge!
+A household needs to be managed. Before Grocy I did this (for almost 10 years) using my first self written software (a C# Windows forms application) and with a bunch of Excel sheets. The software became too much and wasn't to use that intuitively anymore. Also there is a lot of stuff I always wanted to do or to optimize. So I decided to just start from scratch. Grocy is written in Python which allows a fast development, but also means it's not super fast and energy efficient.
 
 ## Things worth to know
 
@@ -93,9 +97,9 @@ The web frontend uses exactly this API for pretty much everything. So everything
 
 ### Barcode readers & camera scanning
 
-Some fields (with a barcode icon) also allow to select a value by scanning a barcode. It works best when your barcode reader prefixes every barcode with a letter which is normally not part of a item name (I use a `$`) and sends a `TAB` after a scan.
+Some fields (with a barcode icon) also allow to select a value by scanning a barcode. It works best when your barcode reader prefixes every barcode with a letter which is normally not part of a item name / EAN (this allows the application to detect that a barcode was scanned and not someone typed a number by hand). In this case the barcode number itself must not have more than 12 digits to fit the barcode icon. More information is provided in the field with a click on the barcode icon.
 
-Additionally it's also possible to use your device camera to scan a barcode by using the camera button on the right side of the corresponding input field (powered by [ZXing](https://github.com/zxing-js/library), totally offline / client-side camera stream processing. Please note due to browser security restrictions, this only works when serving Grocy via a secure connection (`https://`)). [Here](https://www.youtube.com/watch?v=veezFX4X1JU) and [there](https://www.youtube.com/watch?v=Y5YH6IJFnfc) are quick video demos of that.
+Additionally it's also possible to use your device camera to scan a barcode by using the camera button on the right side of the corresponding input field (powered by [ZXing](https://github.com/zxing-js/library)).
 
 _My personal recommendation: Use a USB barcode laser scanner. They are cheap and work 1000% better, faster, under any lighting condition and from any angle._
 
@@ -103,7 +107,7 @@ _My personal recommendation: Use a USB barcode laser scanner. They are cheap and
 
 Products can be directly added to the database via looking them up against external services by a barcode.
 
-This can be done in-place using the product picker workflow "External barcode lookup" (the workflow dialog is displayed when entering something unknown in any product input field) Quick video demo: <https://www.youtube.com/watch?v=-moXPA-VvGc>
+This can be done in-place using the product picker workflow "External barcode lookup" (the workflow dialog is displayed when entering something unknown in any product input field). Quick video demo: https://www.youtube.com/watch?v=veezFX4X1JU
 
 A plugin for [Open Food Facts](https://world.openfoodfacts.org/) is included and used by default (see the `data/config.php` option `STOCK_BARCODE_LOOKUP_PLUGIN`).
 
@@ -134,20 +138,20 @@ Example: Button "**P** Add as new product" can be "pressed" by using the `P` key
 
 ### Installable web app (PWA)
 
-Grocy's web frontend is responsive and an "installable web app" ([PWA](https://en.wikipedia.org/wiki/Progressive_web_app), without providing any offline usage capabilities), that provides a pretty native mobile app-like experience without the need for additional tools.
+Grocy's web frontend is responsive and an "installable web app" ([PWA](https://en.wikipedia.org/wiki/Progressive_web_app), without providing any offline usage capabilities), that provides a pretty native mobile app-like experience.
 
 - Quick video demo on Android/Firefox: <https://www.youtube.com/watch?v=L38drVZfwHs>
 - Quick video demo on Android/Chrome: <https://www.youtube.com/watch?v=rjLdXUFDNuk>
 
 ### Database migrations
 
-Database schema migration is done when visiting the root (`/`) route (click on the logo in the left upper edge) as needed and is also triggered automatically if the version has changed (so when an update has been made).
+Database schema migration is done when visiting the root (`/`) route (click on the logo in the left upper edge) as needed and is also triggered automatically if the version has changed (so when a update is done).
 
-_Please note: Database migrations are supposed to work between releases, not between every commit. If you want to run the current `master` branch (which is the development version), you need to handle that (and more) yourself._
+_Please note: Database migrations are supposed to work between releases, not between every commit. If you want to run the current `master` branch (which is the development version), you need to manually execute the database migrations or delete the database and recreate it._
 
 ### Disable certain features
 
-If you don't use certain feature sets of Grocy (for example if you don't need "Chores"), there are feature flags per major feature set to hide/disable the related UI elements (see `config-dist.php`).
+If you don't use certain feature sets of Grocy (for example if you don't need "Chores"), there are feature flags per major feature set to hide/disable the related UI elements (see `config-dist.php` option `FEATURES`).
 
 ### Adding your own CSS or JS without to have to modify the application itself
 
@@ -156,17 +160,17 @@ If you don't use certain feature sets of Grocy (for example if you don't need "C
 
 ### Demo mode
 
-When the `MODE` setting is set to `dev`, `demo` or `prerelease`, the application will work in a demo mode which means authentication is disabled and some demo data will be generated during the database schema migration (pass the query parameter `nodemodata`, e.g. `https://grocy.example.com/?nodemodata` to skip that).
+When the `MODE` setting is set to `dev`, `demo` or `prerelease`, the application will work in a demo mode which means authentication is disabled and some demo data will be generated during the database setup.
 
 ### Embedded mode
 
 When the file `embedded.txt` exists, it must contain a valid and writable path which will be used as the data directory instead of `data` and authentication will be disabled (used in [Grocy Desktop](https://github.com/grocy/grocy-desktop)).
 
-In embedded mode, settings can be overridden by text files in `data/settingoverrides`, the file name must be `<SettingName>.txt` (e. g. `BASE_URL.txt`) and the content must be the setting value (normally one single line).
+In embedded mode, settings can be overridden by text files in `data/settingoverrides`, the file name must be `<SettingName>.txt` (e. g. `BASE_URL.txt`) and the content must be the setting value (e. g. the file content of `BASE_URL.txt` must be something like `http://192.168.1.1/grocy`).
 
 ## Contributing / Say Thanks
 
-See <https://grocy.info/#say-thanks> if you just want to say thanks or [Contributing](https://github.com/grocy/grocy?tab=contributing-ov-file#contributing-ov-file) for anything else.
+See [CONTRIBUTING.md](.github/CONTRIBUTING.md) for contribution guidelines and see <https://grocy.info/#say-thanks> if you just want to say thanks.
 
 ## Roadmap
 
